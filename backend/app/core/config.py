@@ -58,6 +58,8 @@ class Settings(BaseSettings):
     # Authentication
     # (추후 NAS / LDAP 로그인)
     # -------------------------
+    NAS_BASE_URL: str
+    NAS_VERIFY_SSL: bool = False
 
     # -------------------------
     # Logging
@@ -71,3 +73,5 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+print(settings.model_dump())

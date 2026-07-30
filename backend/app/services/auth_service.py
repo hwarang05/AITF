@@ -21,12 +21,7 @@ class AuthService:
         password: str,
     ) -> bool:
         """
-        NAS 로그인
-
-        Returns
-        -------
-        bool
-            로그인 성공 여부
+        로그인 처리
         """
 
         return await self.provider.authenticate(
