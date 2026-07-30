@@ -18,6 +18,7 @@ FastAPI 애플리케이션의 시작점(Entry Point)
 from fastapi import FastAPI
 
 from app.core.config import settings
+from app.api.router import api_v1
 
 # ============================================================
 # FastAPI 애플리케이션 생성
@@ -29,6 +30,7 @@ app = FastAPI(
     version="0.1.0",
     debug=settings.DEBUG,
 )
+app.include_router(api_v1)
 
 # ============================================================
 # Root API
@@ -36,6 +38,8 @@ app = FastAPI(
 
 
 @app.get("/", tags=["System"])
+
+
 async def root():
     """
     서버 상태 확인 API
