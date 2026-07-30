@@ -17,42 +17,53 @@ FastAPI 애플리케이션의 시작점(Entry Point)
 
 from fastapi import FastAPI
 
-from app.core.config import settings
 from app.api.router import api_v1
+from app.core.config import settings
+from app.core.response import response
+from app.schemas.common import ApiResponse
+from app.core.exceptions import register_exception_handlers
 
-# ============================================================
+# -----------------------------------------------------------------------------
 # FastAPI 애플리케이션 생성
-# ============================================================
+# -----------------------------------------------------------------------------
 
 app = FastAPI(
     title=settings.APP_NAME,
-    description="AI Technology Framework Backend",
-    version="0.1.0",
+    description=settings.APP_DESCRIPTION,
+    version=settings.APP_VERSION,
     debug=settings.DEBUG,
 )
+
+# ---------------------------------------------------------
+# Exception Handler 등록
+# ---------------------------------------------------------
+
+register_exception_handlers(app)
+
+# -----------------------------------------------------------------------------
+# API Router 등록
+# -----------------------------------------------------------------------------
+
 app.include_router(api_v1)
 
-# ============================================================
+# -----------------------------------------------------------------------------
 # Root API
-# ============================================================
+# -----------------------------------------------------------------------------
 
 
-@app.get("/", tags=["System"])
-
-
+@app.get(
+    "/",
+    tags=["System"],
+    response_model=ApiResponse,
+)
 async def root():
     """
     서버 상태 확인 API
-
-    개발 초기에는 서버가 정상적으로 실행되는지
-    확인하기 위한 용도이다.
-
-    Returns:
-        dict: 서버 상태 정보
     """
 
-    return {
-        "status": "success",
-        "message": "AITF Backend Running",
-        "version": "0.1.0",
-    }
+    return response.success(
+        message="AITF Backend Running",
+        data={
+            "version": settings.APP_VERSION,
+        },
+    )

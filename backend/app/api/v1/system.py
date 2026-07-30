@@ -9,6 +9,9 @@ System API
 
 from fastapi import APIRouter
 
+from app.core.response import response
+from app.schemas.common import ApiResponse
+
 # -----------------------------------------------------------------------------
 # Router 생성
 # -----------------------------------------------------------------------------
@@ -19,16 +22,19 @@ router = APIRouter(
 )
 
 
-@router.get("/ping")
+@router.get(
+    "/ping",
+    response_model=ApiResponse,
+)
 async def ping():
     """
     서버 정상 동작 확인
-
-    Returns:
-        dict
     """
 
-    return {
-        "success": True,
-        "message": "Pong!",
-    }
+    return response.success(
+        message="Pong!",
+        data={
+            "server": "AITF",
+            "version": "0.1.0",
+        },
+    )
