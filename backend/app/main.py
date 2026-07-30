@@ -22,6 +22,12 @@ from app.core.config import settings
 from app.core.response import response
 from app.schemas.common import ApiResponse
 from app.core.exceptions import register_exception_handlers
+from app.core.database import engine
+from app.models.base import Base
+
+from app.core.database import engine
+from app.models.base import Base
+from app.models.user import User
 
 # -----------------------------------------------------------------------------
 # FastAPI 애플리케이션 생성
@@ -33,6 +39,8 @@ app = FastAPI(
     version=settings.APP_VERSION,
     debug=settings.DEBUG,
 )
+
+Base.metadata.create_all(bind=engine)
 
 # ---------------------------------------------------------
 # Exception Handler 등록
