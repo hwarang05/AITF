@@ -12,8 +12,11 @@ API Router 관리
 
 from fastapi import APIRouter
 
+from app.api.v1.auth import router as auth_router
+from app.api.v1.chat import router as chat_router
 from app.api.v1.system import router as system_router
 from app.core.config import settings
+
 
 # -----------------------------------------------------------------------------
 # Version 1 Router
@@ -24,3 +27,5 @@ api_v1 = APIRouter(
 )
 
 api_v1.include_router(system_router)
+api_v1.include_router(chat_router)
+api_v1.include_router(auth_router)
