@@ -32,7 +32,7 @@ class UserService:
         self.db = db
 
     # --------------------------------------------------
-    # 사용자 조회
+    # 사용자 조회 (Username)
     # --------------------------------------------------
     def get_by_username(
         self,
@@ -41,6 +41,20 @@ class UserService:
 
         stmt = select(User).where(
             User.nas_username == nas_username
+        )
+
+        return self.db.scalar(stmt)
+
+    # --------------------------------------------------
+    # 사용자 조회 (ID)
+    # --------------------------------------------------
+    def get_by_id(
+        self,
+        user_id: int,
+    ) -> User | None:
+
+        stmt = select(User).where(
+            User.id == user_id
         )
 
         return self.db.scalar(stmt)

@@ -1,5 +1,13 @@
 fastapi
 uvicorn[standard]
+
 pydantic
 pydantic-settings
 python-dotenv
+
+sqlalchemy
+alembic
+httpx
+tzdata
+python-jose[cryptography]
+python-multipart

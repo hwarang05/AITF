@@ -5,7 +5,11 @@
 개발/운영 환경이 달라도 코드 수정 없이 .env만 변경하면 된다.
 """
 
+from functools import lru_cache
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+from app.core.logger import logger
 
 
 class Settings(BaseSettings):
@@ -22,49 +26,46 @@ class Settings(BaseSettings):
     # -------------------------
     # LLM
     # -------------------------
-    # 사용할 LLM Provider
+
     LLM_PROVIDER: str
-
-    # LLM 서버 주소
     LLM_BASE_URL: str
-
-    # 사용할 모델명
     LLM_MODEL: str
-
-    # LLM 요청 제한 시간(초)
     LLM_TIMEOUT: int = 120
 
     # -------------------------
     # Database
     # -------------------------
-    # 데이터베이스 연결 문자열
-    DATABASE_URL: str
 
-    # SQL 실행 로그 출력 여부
+    DATABASE_URL: str
     DATABASE_ECHO: bool = False
 
     # -------------------------
     # Vector DB
     # -------------------------
+
     VECTOR_DB_PROVIDER: str
     VECTOR_DB_URL: str
 
     # -------------------------
     # Storage
     # -------------------------
+
     FILE_STORAGE: str
 
     # -------------------------
-    # Authentication
-    # (추후 NAS / LDAP 로그인)
+    # NAS
     # -------------------------
+
     NAS_BASE_URL: str
     NAS_VERIFY_SSL: bool = False
 
     # -------------------------
-    # Logging
-    # (추후 Log Level 등)
+    # JWT
     # -------------------------
+
+    JWT_SECRET_KEY: str
+    JWT_ALGORITHM: str
+    JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -72,6 +73,12 @@ class Settings(BaseSettings):
     )
 
 
-settings = Settings()
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()
 
-print(settings.model_dump())
+
+settings = get_settings()
+
+if settings.DEBUG:
+    logger.debug(settings.model_dump())

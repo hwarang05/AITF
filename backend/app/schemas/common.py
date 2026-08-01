@@ -18,12 +18,15 @@
 }
 """
 
-from typing import Any
+from typing import Generic
+from typing import TypeVar
 
 from pydantic import BaseModel
 
+T = TypeVar("T")
 
-class ApiResponse(BaseModel):
+
+class ApiResponse(BaseModel, Generic[T]):
     """
     공통 API 응답 모델
 
@@ -33,11 +36,8 @@ class ApiResponse(BaseModel):
         data    : 실제 응답 데이터
     """
 
-    # 요청 성공 여부
     success: bool
 
-    # 응답 메시지
     message: str
 
-    # 실제 데이터
-    data: Any | None = None
+    data: T | None = None

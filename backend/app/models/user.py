@@ -8,14 +8,19 @@ AITF는 최소한의 사용자 정보만 관리한다.
 """
 
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean
 from sqlalchemy import DateTime
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 from app.models.base import BaseEntity
+
+if TYPE_CHECKING:
+    from app.models.conversation import Conversation
 
 
 class User(BaseEntity):
@@ -74,4 +79,12 @@ class User(BaseEntity):
         DateTime(timezone=True),
         nullable=True,
         comment="마지막 로그인 시간",
+    )
+
+    # -------------------------
+    # Conversations
+    # -------------------------
+    conversations: Mapped[list["Conversation"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
     )

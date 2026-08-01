@@ -2,68 +2,45 @@
 Prompt Builder
 
 LLM에게 전달할 messages를 생성한다.
-
-향후
-- System Prompt
-- Conversation Memory
-- RAG 검색 결과
-- Tool Calling 결과
-- 사용자 프로필
-
-등을 모두 여기에서 조합한다.
 """
 
-from app.prompts.system import DEFAULT_SYSTEM_PROMPT
+from app.prompts.builders import (
+    ContextBuilder,
+    MemoryBuilder,
+    SystemBuilder,
+    UserBuilder,
+)
+from app.schemas.context import LLMContext
+from app.schemas.message import ChatMessage
 
 
 class PromptBuilder:
-    """
-    LLM Prompt 생성기
-    """
-
     @staticmethod
-    def build(user_message: str) -> list[dict[str, str]]:
-        """
-        LLM에게 전달할 messages를 생성한다.
+    def build(
+        *,
+        user_message: str,
+        context: LLMContext | None = None,
+        system_prompt: str | None = None,
+    ) -> list[ChatMessage]:
 
-        Args:
-            user_message:
-                사용자 입력
+        context = context or LLMContext()
 
-        Returns:
-            Ollama/OpenAI Chat API 형식의 messages
-        """
+        messages: list[ChatMessage] = []
 
-        messages: list[dict[str, str]] = []
-
-        # -------------------------
-        # System Prompt
-        # -------------------------
-        messages.append(
-            {
-                "role": "system",
-                "content": DEFAULT_SYSTEM_PROMPT,
-            }
+        messages.extend(
+            SystemBuilder.build(system_prompt)
         )
 
-        # -------------------------
-        # Conversation Memory
-        # (향후 추가 예정)
-        # -------------------------
+        messages.extend(
+            MemoryBuilder.build(context.memory)
+        )
 
-        # -------------------------
-        # RAG Context
-        # (향후 추가 예정)
-        # -------------------------
+        messages.extend(
+            ContextBuilder.build(context)
+        )
 
-        # -------------------------
-        # User Message
-        # -------------------------
-        messages.append(
-            {
-                "role": "user",
-                "content": user_message,
-            }
+        messages.extend(
+            UserBuilder.build(user_message)
         )
 
         return messages

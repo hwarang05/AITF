@@ -19,15 +19,23 @@ from fastapi import FastAPI
 
 from app.api.router import api_v1
 from app.core.config import settings
-from app.core.response import response
-from app.schemas.common import ApiResponse
-from app.core.exceptions import register_exception_handlers
 from app.core.database import engine
+from app.core.exception_handler import register_exception_handlers
+from app.core.response import response
 from app.models.base import Base
 
-from app.core.database import engine
-from app.models.base import Base
+# ---------------------------------------------------------------------
+# Model Import
+#
+# Base.metadata.create_all()이 테이블을 생성할 수 있도록
+# 모든 ORM Model을 import한다.
+# ---------------------------------------------------------------------
+
 from app.models.user import User
+from app.models.conversation import Conversation
+from app.models.message import Message
+
+from app.schemas.common import ApiResponse
 
 # -----------------------------------------------------------------------------
 # FastAPI 애플리케이션 생성
@@ -40,11 +48,15 @@ app = FastAPI(
     debug=settings.DEBUG,
 )
 
+# -----------------------------------------------------------------------------
+# Database
+# -----------------------------------------------------------------------------
+
 Base.metadata.create_all(bind=engine)
 
-# ---------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Exception Handler 등록
-# ---------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 register_exception_handlers(app)
 
@@ -57,7 +69,6 @@ app.include_router(api_v1)
 # -----------------------------------------------------------------------------
 # Root API
 # -----------------------------------------------------------------------------
-
 
 @app.get(
     "/",

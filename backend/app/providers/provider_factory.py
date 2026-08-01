@@ -10,8 +10,7 @@ from app.providers.ollama_provider import OllamaProvider
 from app.providers.openai_provider import OpenAIProvider
 
 
-# 사용할 Provider 목록
-PROVIDERS = {
+PROVIDERS: dict[str, type[BaseLLMProvider]] = {
     "ollama": OllamaProvider,
     "openai": OpenAIProvider,
 }
@@ -19,7 +18,7 @@ PROVIDERS = {
 
 def get_provider() -> BaseLLMProvider:
     """
-    설정에 따라 사용할 LLM Provider를 생성하여 반환한다.
+    설정에 따라 사용할 Provider를 생성한다.
     """
 
     provider_name = settings.LLM_PROVIDER.lower()
@@ -27,9 +26,11 @@ def get_provider() -> BaseLLMProvider:
     provider_class = PROVIDERS.get(provider_name)
 
     if provider_class is None:
-        supported = ", ".join(PROVIDERS.keys())
+        supported = ", ".join(PROVIDERS)
+
         raise ValueError(
-            f"지원하지 않는 LLM Provider입니다: {provider_name} "
+            f"지원하지 않는 LLM Provider입니다: "
+            f"{provider_name} "
             f"(지원: {supported})"
         )
 

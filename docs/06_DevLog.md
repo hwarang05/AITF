@@ -1,17 +1,16 @@
-## 2026-07-30
+## 2026-08-01
 
-### AI Framework 설계
+### 완료 작업
+- Authentication API 구현
+- User 모델 생성
 
-- Provider 패턴을 적용하여 LLM 교체가 가능하도록 설계
-- API는 Provider를 직접 호출하지 않고 Service를 통해 접근
-- 향후 OpenAI, Ollama, Gemini, Claude를 동일한 인터페이스로 지원 예정
+### 설계 결정(ADR)
+- Repository Pattern을 사용하지 않기로 확정
+- SearchSession 엔티티 추가
 
-## 2026-07-30
+### 이유
+- Service 중심 구조 유지
+- 검색 이력과 RAG 튜닝 지원
 
-### Authentication API 생성
-
-- User Entity 생성
-- Authentication Router 추가
-- LoginRequest / LoginResponse Schema 생성
-- Swagger Login API 연동
-- 프로젝트 API 구조 정리
+### 다음 작업
+- SQLAlchemy 모델 구현
